@@ -1,0 +1,28 @@
+version: '3.5'
+volumes:
+  data:
+services:
+  windows:
+    image: ghcr.io/dockur/windows:latest
+    container_name: linuxoffice # Created Docker VM Name.
+    environment:
+      VERSION: "tiny11"
+      RAM_SIZE: "4G" # RAM allocated to the Windows VM.
+      CPU_CORES: "4" # CPU cores allocated to the Windows VM.
+      DISK_SIZE: "32G" # Size of the primary hard disk.
+      USERNAME: "MyWindowsUser" # Edit here to set a custom Windows username. The default is 'MyWindowsUser'.
+      PASSWORD: "MyWindowsPassword"
+      HOME: "${HOME}" # Set path to Linux user home folder.
+    privileged: true # Grant the Windows VM extended privileges.
+    ports:
+      - 8006:8006 # Map '8006' on Linux host to '8006' on Windows VM --> For VNC Web Interface @ http://127.0.0.1:8006.
+      - 3389:3389/tcp # Map '3389' on Linux host to '3389' on Windows VM --> For Remote Desktop Protocol (RDP).
+      - 3389:3389/udp # Map '3389' on Linux host to '3389' on Windows VM --> For Remote Desktop Protocol (RDP).
+    stop_grace_period: 120s # Wait 120 seconds before sending SIGTERM when attempting to shut down the Windows VM.
+    restart: on-failure # Restart the Windows VM if the exit code indicates an error.
+    volumes:
+      - data:/storage # Mount volume 'data' to use as Windows 'C:' drive.
+      - ${HOME}/office:/shared # Mount Linux user home directory @ '\\host.lan\Data'.
+        #- /opt/linuxoffice/tiny11_2311_x64.iso:/custom.iso # Uncomment to use a custom Windows ISO. If specified, 'VERSION' (e.g. 'tiny11') will be ignored.
+    devices:
+      - /dev/kvm # Enable KVM.
