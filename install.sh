@@ -48,7 +48,7 @@ echo "RAM: ${RAM}GB, CPU: ${CPU}, Disk: ${DISK}GB olarak ayarlandı. Vazgeçmek 
 
 if ! command -v xfreerdp &> /dev/null; then
     echo "Freerdp yükleniyor..."
-    sudo apt install freerdp2-x11
+    sudo apt install freerdp2-x11 -y
 else
     echo "Freerdp is already installed."
 fi
@@ -75,17 +75,7 @@ if ! command -v docker-compose &> /dev/null; then
 else
     echo "Docker Compose zaten yüklü."
 fi
-'''
-# Add user to Docker group
-if ! groups $USER | grep -q '\bdocker\b'; then
-    echo "Adding user to Docker group..."
-    sudo usermod -aG docker $USER
-    #echo "Please log out and back in for the Docker group changes to take effect."
-    exit 0
-else
-    echo "User is already in the Docker group."
-fi
-'''
+
 
 # Check for docker-compose.yml
 if [ ! -f "$COMPOSE_FILE" ]; then
@@ -125,9 +115,10 @@ chattr +a /linuxoffice
 cd "$REPO_DIR"  # Change to the repository directory
 sudo docker-compose up -d
 
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Sistem ayağa kaldırılıyor... Bu 5 10 dakika sürebilir..."
 
 sleep 300
-echo "Sistem ayağa kaldırılıyor... Bu 5 dakika civarında sürecektir..."
+
 # Verify Docker Compose status
 if docker-compose ps | grep -q 'Up'; then
     echo "Docker Compose başarıyla başlatıldı."
