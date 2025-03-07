@@ -9,8 +9,22 @@ FILE="/var/lib/docker/volumes/linuxoffice/_data/tiny11.iso"
 COMPOSE_FILE="$REPO_DIR/docker-compose.yml"  # Path to docker-compose.yml in the cloned repo
 
 
+
+# Silinecek dizinler
+DIRS=("/linuxoffice" "/opt/linuxoffice")
+
+for DIR in "${DIRS[@]}"; do
+    if [ -e "$DIR" ]; then
+        echo "Siliniyor: $DIR"
+        rm -rf "$DIR"
+    else
+        echo "Kurulum başlıyor"
+    fi
+done
+
+
 # Update package lists
-echo "Updating package lists..."
+echo "Paket listesi güncelleniyor..."
 sudo apt update
 
 if ! command -v git &> /dev/null; then
