@@ -241,3 +241,43 @@ done
 echo "İşlem tamamlandı!"
 echo "Masaüstü kısayolu oluşturuldu!"
 
+
+
+##### OFFİCE DİZİN KISAYOLU
+
+# Define the target directory and shortcut name
+TARGET_DIR="/linuxoffice/office"
+SHORTCUT_NAME="Office"
+DESKTOP_PATH="/etc/skel/Desktop"  # Template for new users
+GLOBAL_DESKTOP_PATH="/usr/share/applications"
+
+# Ensure target exists
+if [ ! -d "$TARGET_DIR" ]; then
+    echo "Hedef dizin mevcut değil. $TARGET_DIR"
+    exit 1
+fi
+
+# Create shortcut as a .desktop file
+SHORTCUT_CONTENT="[Desktop Entry]
+Type=Link
+Name=$SHORTCUT_NAME
+Icon=folder
+URL=file://$TARGET_DIR"
+
+# Ensure all existing users get the shortcut
+for user_home in /home/*; do
+    user_desktop="$user_home/Desktop"
+    if [ -d "$user_desktop" ]; then
+        echo "$SHORTCUT_CONTENT" > "$user_desktop/$SHORTCUT_NAME.desktop"
+        chmod +x "$user_desktop/$SHORTCUT_NAME.desktop"
+        chown $(basename $user_home):$(basename $user_home) "$user_desktop/$SHORTCUT_NAME.desktop"
+    fi
+done
+
+# Ensure new users get the shortcut
+mkdir -p "$DESKTOP_PATH"
+echo "$SHORTCUT_CONTENT" > "$DESKTOP_PATH/$SHORTCUT_NAME.desktop"
+chmod +x "$DESKTOP_PATH/$SHORTCUT_NAME.desktop"
+
+echo "Kısayol oluşturuldu."
+
