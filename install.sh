@@ -98,19 +98,19 @@ fi
 
 
 # Modify docker-compose.yml based on the presence of tiny11.iso
-if [ -f "$FILE" ]; then
-    echo "File $FILE found. Modifying $COMPOSE_FILE..."
+#if [ -f "$FILE" ]; then
+#    echo "File $FILE found. Modifying $COMPOSE_FILE..."
     
     # Comment out VERSION=tiny11
-    sed -i 's/VERSION: "tiny11"/#VERSION: "tiny11"/' "$COMPOSE_FILE" 
+#    sed -i 's/VERSION: "tiny11"/#VERSION: "tiny11"/' "$COMPOSE_FILE" 
     
     # Uncomment the line starting with - /opt
-    sed -i 's|#- /var/lib/docker/volumes/linuxoffice/_data/tiny11.iso:/custom.iso|- /var/lib/docker/volumes/linuxoffice/_data/tiny11.iso:/custom.iso|' "$COMPOSE_FILE"
+#    sed -i 's|#- /var/lib/docker/volumes/linuxoffice/_data/tiny11.iso:/custom.iso|- /var/lib/docker/volumes/linuxoffice/_data/tiny11.iso:/custom.iso|' "$COMPOSE_FILE"
 
-    echo "Modifications completed in $COMPOSE_FILE."
-else
-    echo "File $FILE does not exist. No changes made to $COMPOSE_FILE."
-fi
+#    echo "Modifications completed in $COMPOSE_FILE."
+#else
+#    echo "File $FILE does not exist. No changes made to $COMPOSE_FILE."
+#fi
 
 
 
