@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Variables
 REPO_DIR="/opt/linuxoffice"  # Replace with the name of the cloned repository directory
 FILE="/var/lib/docker/volumes/linuxoffice/_data/tiny11.iso"
@@ -83,7 +84,7 @@ fi
 # Install Docker Compose (v2, included with Docker)
 if ! command -v docker-compose &> /dev/null; then
     echo "Docker Compose yükleniyor..."
-    sudo apt install -y docker-compose
+    sudo apt install -y docker-compose-plugin
 else
     echo "Docker Compose zaten yüklü."
 fi
@@ -140,6 +141,7 @@ IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
 #echo "Container IP: $IP"
 
 echo "Kurulma işlemi sürüyor... Tarayıcınızdan http://localhost:8006/ bağlantısına giderek görebilirsiniz."
+sleep 60
 
 while true; do
     # xfreerdp'yi çalıştır ve çıktıyı al
@@ -235,7 +237,7 @@ for user_home in /home/*; do
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Office Powerpoint
+Name=Office Powerpoint 16
 Comment=Office Powerpoint
 Exec=xfreerdp /u:MyWindowsUser /p:MyWindowsPassword /v:$IP /cert:tofu /app:'C:\Program Files (x86)\Microsoft Office\root\Office16\POWERPNT.EXE' /dynamic-resolution
 Icon=computer
@@ -254,7 +256,7 @@ EOF
 done
 
 echo "İşlem tamamlandı!"
-echo "Masaüstü kısayolu oluşturuldu!"
+echo "Office 16 uygulama kısayolu oluşturuldu!"
 
 
 
@@ -298,5 +300,4 @@ for desktop_folder in "Desktop" "Masaüstü"; do
     chmod 644 "/etc/skel/$desktop_folder/$SHORTCUT_NAME.desktop"
 done
 
-echo "Kısayol oluşturuldu."
-
+echo "Office dizini kısayolu oluşturuldu."
