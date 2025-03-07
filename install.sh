@@ -21,7 +21,7 @@ fi
 
 
 # Clone the repository (if not already cloned)
-if [ ! -d "$REPO_DIR" ]; then
+if [ ! -d "$REPO_DIR/docker-compose.yml" ]; then
     echo "Repository klonlaniyor..."
     git clone https://github.com/ogretmen1/linuxoffice.git "$REPO_DIR"
 else
