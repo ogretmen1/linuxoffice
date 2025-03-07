@@ -16,6 +16,7 @@ DIRS=("/linuxoffice" "/opt/linuxoffice")
 for DIR in "${DIRS[@]}"; do
     if [ -e "$DIR" ]; then
         echo "Siliniyor: $DIR"
+	chattr -a $DIR
         rm -rf "$DIR"
     else
         echo "Kurulum başlıyor"
