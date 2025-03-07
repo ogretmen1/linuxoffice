@@ -165,8 +165,8 @@ for user_home in /home/*; do
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Remote Desktop
-Comment=Linux Office
+Name=Windows
+Comment=Windows
 Exec=xfreerdp /u:MyWindowsUser /p:MyWindowsPassword /v:$IP /cert:tofu
 Icon=computer
 Terminal=false
@@ -186,6 +186,58 @@ EOF
     fi
 done
 
-echo "🎯 İşlem tamamlandı!"
+echo "İşlem tamamlandı!"
+echo "Masaüstü Windows kısayolu oluşturuldu!"
+
+
+for user_home in /home/*; do
+    if [ -d "$user_home" ]; then
+        USERNAME=$(basename "$user_home")
+
+        # Olası masaüstü dizinleri
+        DESKTOP_DIR="$user_home/Desktop"
+        ALTERNATE_DESKTOP_DIR="$user_home/Masaüstü"
+
+        # Kullanıcının masaüstü dizinini belirle
+        if [ -d "$DESKTOP_DIR" ]; then
+            LAUNCHER_PATH="$DESKTOP_DIR/linuxoffice.desktop"
+        elif [ -d "$ALTERNATE_DESKTOP_DIR" ]; then
+            LAUNCHER_PATH="$ALTERNATE_DESKTOP_DIR/linuxoffice.desktop"
+        else
+            echo "⚠️  Kullanıcı $USERNAME için masaüstü dizini bulunamadı, atlanıyor..."
+            continue
+        fi
+
+        # Eğer başlatıcı zaten varsa atla
+        if [ ! -f "$LAUNCHER_PATH" ]; then
+            echo "📌 $USERNAME için başlatıcı oluşturuluyor: $LAUNCHER_PATH"
+
+            # Başlatıcıyı oluştur
+            cat <<EOF > "$LAUNCHER_PATH"
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Office Powerpoint
+Comment=Office Powerpoint
+Exec=xfreerdp /u:MyWindowsUser /p:MyWindowsPassword /v:$IP /cert:tofu /app:'C:\Program Files (x86)\Microsoft Office\root\Office16\POWERPNT.EXE' /dynamic-resolution
+Icon=computer
+Terminal=false
+Categories=Network;
+EOF
+
+            # Çalıştırma izni ver
+            chmod +x "$LAUNCHER_PATH"
+
+            # Kullanıcıya ait yap
+            chown "$USERNAME:$USERNAME" "$LAUNCHER_PATH"
+
+            echo "✅ $USERNAME için başlatıcı oluşturuldu."
+        else
+            echo "ℹ️  $USERNAME için başlatıcı zaten var, atlanıyor."
+        fi
+    fi
+done
+
+echo "İşlem tamamlandı!"
 echo "Masaüstü kısayolu oluşturuldu!"
 
