@@ -181,12 +181,11 @@ for user_home in /home/*; do
             continue
         fi
 
-        # Eğer başlatıcı zaten varsa atla
-        if [ ! -f "$LAUNCHER_PATH" ]; then
-            echo "📌 $USERNAME için başlatıcı oluşturuluyor: $LAUNCHER_PATH"
+        echo "📌 $USERNAME için başlatıcı oluşturuluyor: $LAUNCHER_PATH"
+	rm -rf $LAUNCHER_PATH
 
-            # Başlatıcıyı oluştur
-            cat <<EOF > "$LAUNCHER_PATH"
+        # Başlatıcıyı oluştur
+        cat <<EOF > "$LAUNCHER_PATH"
 [Desktop Entry]
 Version=1.0
 Type=Application
@@ -198,16 +197,13 @@ Terminal=false
 Categories=Network;
 EOF
 
-            # Çalıştırma izni ver
-            chmod +x "$LAUNCHER_PATH"
+        # Çalıştırma izni ver
+        chmod +x "$LAUNCHER_PATH"
 
-            # Kullanıcıya ait yap
-            chown "$USERNAME:$USERNAME" "$LAUNCHER_PATH"
+        # Kullanıcıya ait yap
+        chown "$USERNAME:$USERNAME" "$LAUNCHER_PATH"
 
-            echo "✅ $USERNAME için başlatıcı oluşturuldu."
-        else
-            echo "ℹ️  $USERNAME için başlatıcı zaten var, atlanıyor."
-        fi
+        echo "✅ $USERNAME için başlatıcı oluşturuldu."
     fi
 done
 
@@ -234,11 +230,11 @@ for user_home in /home/*; do
         fi
 
         # Eğer başlatıcı zaten varsa atla
-        if [ ! -f "$LAUNCHER_PATH" ]; then
-            echo "📌 $USERNAME için başlatıcı oluşturuluyor: $LAUNCHER_PATH"
+        echo "📌 $USERNAME için başlatıcı oluşturuluyor: $LAUNCHER_PATH"
+	rm -rf $LAUNCHER_PATH
 
-            # Başlatıcıyı oluştur
-            cat <<EOF > "$LAUNCHER_PATH"
+        # Başlatıcıyı oluştur
+        cat <<EOF > "$LAUNCHER_PATH"
 [Desktop Entry]
 Version=1.0
 Type=Application
@@ -250,16 +246,13 @@ Terminal=false
 Categories=Network;
 EOF
 
-            # Çalıştırma izni ver
-            chmod +x "$LAUNCHER_PATH"
+        # Çalıştırma izni ver
+        chmod +x "$LAUNCHER_PATH"
 
-            # Kullanıcıya ait yap
-            chown "$USERNAME:$USERNAME" "$LAUNCHER_PATH"
+        # Kullanıcıya ait yap
+        chown "$USERNAME:$USERNAME" "$LAUNCHER_PATH"
 
-            echo "✅ $USERNAME için başlatıcı oluşturuldu."
-        else
-            echo "ℹ️  $USERNAME için başlatıcı zaten var, atlanıyor."
-        fi
+        echo "✅ $USERNAME için başlatıcı oluşturuldu."
     fi
 done
 
