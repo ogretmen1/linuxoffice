@@ -210,9 +210,9 @@ for user_home in /home/*; do
 
         # Kullanıcının masaüstü dizinini belirle
         if [ -d "$DESKTOP_DIR" ]; then
-            LAUNCHER_PATH="$DESKTOP_DIR/linuxoffice.desktop"
+            LAUNCHER_PATH="$DESKTOP_DIR/linuxoffice_powerpoint.desktop"
         elif [ -d "$ALTERNATE_DESKTOP_DIR" ]; then
-            LAUNCHER_PATH="$ALTERNATE_DESKTOP_DIR/linuxoffice.desktop"
+            LAUNCHER_PATH="$ALTERNATE_DESKTOP_DIR/linuxoffice_powerpoint.desktop"
         else
             echo "⚠️  Kullanıcı $USERNAME için masaüstü dizini bulunamadı, atlanıyor..."
             continue
@@ -255,38 +255,43 @@ echo "Masaüstü kısayolu oluşturuldu!"
 
 ##### OFFİCE DİZİN KISAYOLU
 
-# Define the target directory and shortcut name
+# Hedef dizin ve kısayol adı
 TARGET_DIR="/linuxoffice/office"
-SHORTCUT_NAME="Office"
-DESKTOP_PATH="/etc/skel/Desktop"  # Template for new users
+SHORTCUT_NAME="Office Dosyaları"
+DESKTOP_PATH="/etc/skel/Masaüstü"  # Yeni kullanıcılar için
 GLOBAL_DESKTOP_PATH="/usr/share/applications"
 
-# Ensure target exists
+# Hedef dizin mevcut mu?
 if [ ! -d "$TARGET_DIR" ]; then
-    echo "Hedef dizin mevcut değil. $TARGET_DIR"
+    echo "Hedef dizin mevcut değil: $TARGET_DIR"
     exit 1
 fi
 
-# Create shortcut as a .desktop file
+# .desktop dosya içeriği
 SHORTCUT_CONTENT="[Desktop Entry]
 Type=Link
 Name=$SHORTCUT_NAME
 Icon=folder
 URL=file://$TARGET_DIR"
 
-# Ensure all existing users get the shortcut
+# Var olan kullanıcılar için
 for user_home in /home/*; do
-    user_desktop="$user_home/Desktop"
-    if [ -d "$user_desktop" ]; then
-        echo "$SHORTCUT_CONTENT" > "$user_desktop/$SHORTCUT_NAME.desktop"
-        chmod +x "$user_desktop/$SHORTCUT_NAME.desktop"
-        chown $(basename $user_home):$(basename $user_home) "$user_desktop/$SHORTCUT_NAME.desktop"
-    fi
+    for desktop_folder in "Desktop" "Masaüstü"; do
+        user_desktop="$user_home/$desktop_folder"
+        if [ -d "$user_desktop" ]; then
+            echo "$SHORTCUT_CONTENT" > "$user_desktop/$SHORTCUT_NAME.desktop"
+            chmod 644 "$user_desktop/$SHORTCUT_NAME.desktop"
+            chown $(basename "$user_home"):$(basename "$user_home") "$user_desktop/$SHORTCUT_NAME.desktop"
+        fi
+    done
 done
 
-# Ensure new users get the shortcut
-mkdir -p "$DESKTOP_PATH"
-echo "$SHORTCUT_CONTENT" > "$DESKTOP_PATH/$SHORTCUT_NAME.desktop"
-chmod +x "$DESKTOP_PATH/$SHORTCUT_NAME.desktop"
+# Yeni kullanıcılar için
+for desktop_folder in "Desktop" "Masaüstü"; do
+    mkdir -p "/etc/skel/$desktop_folder"
+    echo "$SHORTCUT_CONTENT" > "/etc/skel/$desktop_folder/$SHORTCUT_NAME.desktop"
+    chmod 644 "/etc/skel/$desktop_folder/$SHORTCUT_NAME.desktop"
+done
 
 echo "Kısayol oluşturuldu."
+
