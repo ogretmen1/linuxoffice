@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Exit on error
-set -e
-
 # Variables
 REPO_DIR="/opt/linuxoffice"  # Replace with the name of the cloned repository directory
 FILE="/var/lib/docker/volumes/linuxoffice/_data/tiny11.iso"
@@ -86,7 +83,7 @@ fi
 # Install Docker Compose (v2, included with Docker)
 if ! command -v docker-compose &> /dev/null; then
     echo "Docker Compose yükleniyor..."
-    sudo apt install -y docker-compose-plugin
+    sudo apt install -y docker-compose
 else
     echo "Docker Compose zaten yüklü."
 fi
@@ -150,7 +147,7 @@ while true; do
 
     # Eğer hata mesajı içeriyorsa, bekleyip tekrar dene
     if echo "$OUTPUT" | grep -q -E "Broken pipe|ERRCONNECT_CONNECT_TRANSPORT_FAILED|freerdp_post_connect failed"; then
-        echo "Kurulma işlemi sürüyor... Tarayıcınızdan http://localhost:8006/ bağlantısına giderek görebilirsiniz."
+        echo "Kurulma işlemi sürüyor..."
         sleep 30
     else
         echo "Kurulma işlemi başarıyla sonuçlandı"
