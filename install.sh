@@ -71,7 +71,7 @@ fi
 # Install Docker Compose (v2, included with Docker)
 if ! command -v docker-compose &> /dev/null; then
     echo "Docker Compose yükleniyor..."
-    sudo apt install -y docker-compose-plugin
+    sudo apt install -y docker-compose
 else
     echo "Docker Compose zaten yüklü."
 fi
