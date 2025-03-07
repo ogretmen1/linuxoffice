@@ -71,7 +71,7 @@ fi
 # Install Docker Compose (v2, included with Docker)
 if ! command -v docker-compose &> /dev/null; then
     echo "Docker Compose yükleniyor..."
-    sudo apt install -y docker-compose
+    sudo apt install -y docker-compose-plugin
 else
     echo "Docker Compose zaten yüklü."
 fi
@@ -115,24 +115,34 @@ chattr +a /linuxoffice
 cd "$REPO_DIR"  # Change to the repository directory
 sudo docker-compose up -d
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Sistem ayağa kaldırılıyor... Bu 5 10 dakika sürebilir..."
-
-sleep 300
-
 # Verify Docker Compose status
 if docker-compose ps | grep -q 'Up'; then
-    echo "Docker Compose başarıyla başlatıldı."
+    echo "Konteyner  başarıyla başlatıldı."
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Sistem ayağa kaldırılıyor... Bu 10 ile 15 dakika arasında sürebilir..."
 else
     echo "Hata: Docker Compose başlatırken hata."
     exit 1
 fi
 
-echo "Ön hazırlıklar tamamlandı. Windows arka planda kuruluyor. http://localhost:8006/ adresinde görebilirsiniz."
-
 IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' linuxoffice)
 #echo "Container IP: $IP"
 
-xfreerdp /u:"MyWindowsUser" /p:"MyWindowsPassword" /v:$IP /cert:tofu
+echo "Kurulma işlemi sürüyor... Tarayıcınızdan http://localhost:8006/ bağlantısına giderek görebilirsiniz."
+
+while true; do
+    # xfreerdp'yi çalıştır ve çıktıyı al
+    OUTPUT=$(xfreerdp /u:"MyWindowsUser" /p:"MyWindowsPassword" /v:$IP /cert:tofu 2>&1)
+
+    # Eğer hata mesajı içeriyorsa, bekleyip tekrar dene
+    if echo "$OUTPUT" | grep -q -E "Broken pipe|ERRCONNECT_CONNECT_TRANSPORT_FAILED|freerdp_post_connect failed"; then
+        echo "Kurulma işlemi sürüyor... Tarayıcınızdan http://localhost:8006/ bağlantısına giderek görebilirsiniz."
+        sleep 30
+    else
+        echo "Kurulma işlemi başarıyla sonuçlandı"
+        break
+    fi
+done
+
 
 echo "Linux bilgisayarınızdan /linuxoffice/office/ dizinine indirdiğiniz her şeyi Computer\Network\host.lan\_data dizininde görebilirsiniz. Office Winrar gibi uygulamaları bu şekilde windows tarafına yüklemeniz gerekmektedir."
 
@@ -280,4 +290,3 @@ echo "$SHORTCUT_CONTENT" > "$DESKTOP_PATH/$SHORTCUT_NAME.desktop"
 chmod +x "$DESKTOP_PATH/$SHORTCUT_NAME.desktop"
 
 echo "Kısayol oluşturuldu."
-
