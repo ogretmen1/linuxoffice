@@ -1,4 +1,12 @@
 #!/bin/bash
+if docker-compose ps | grep -q 'Up'; then
+    echo "Konteyner çalışıyor."
+    echo "Kısayollar oluşturuluyor"
+else
+    echo "Çalışan konteyner bulunamadı."
+    exit 1
+fi
+IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' linuxoffice)
 
 # Kullanıcıların ev dizinini kontrol et
 for user_home in /home/*; do
