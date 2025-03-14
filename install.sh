@@ -145,7 +145,7 @@ sleep 60
 
 while true; do
     # xfreerdp'yi çalıştır ve çıktıyı al
-    OUTPUT=$(xfreerdp /u:"MyWindowsUser" /p:"MyWindowsPassword" /v:$IP /cert:tofu 2>&1)
+    OUTPUT=$(xfreerdp /u:"MyWindowsUser" /p:"MyWindowsPassword" /v:$IP /cert:ignore 2>&1)
 
     # Eğer hata mesajı içeriyorsa, bekleyip tekrar dene
     if echo "$OUTPUT" | grep -q -E "Broken pipe|ERRCONNECT_CONNECT_TRANSPORT_FAILED|freerdp_post_connect failed"; then
@@ -190,7 +190,7 @@ Version=1.0
 Type=Application
 Name=Windows
 Comment=Windows
-Exec=xfreerdp /u:MyWindowsUser /p:MyWindowsPassword /v:$IP /cert:tofu /gfx /sound /dynamic-resolution
+Exec=xfreerdp /u:MyWindowsUser /p:MyWindowsPassword /v:$IP /cert:ignore /gfx /sound /dynamic-resolution
 Icon=computer
 Terminal=false
 Categories=Network;
@@ -239,7 +239,7 @@ Version=1.0
 Type=Application
 Name=Office Powerpoint 16
 Comment=Office Powerpoint
-Exec=xfreerdp /u:MyWindowsUser /p:MyWindowsPassword /v:$IP /cert:tofu /app:'C:\Program Files (x86)\Microsoft Office\root\Office16\POWERPNT.EXE' /dynamic-resolution /gfx /sound
+Exec=xfreerdp /u:MyWindowsUser /p:MyWindowsPassword /v:$IP /cert:ignore /app:'C:\Program Files (x86)\Microsoft Office\root\Office16\POWERPNT.EXE' /dynamic-resolution /gfx /sound
 Icon=computer
 Terminal=false
 Categories=Network;
